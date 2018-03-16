@@ -1,0 +1,31 @@
+nginx:
+  image: prooph/nginx:www
+  ports:
+      - "8080:80"
+      - "8443:443"
+  links:
+    - php:php
+  volumes_from:
+    - dataphp
+
+php:
+  image: prooph/php:7.2-fpm
+  links:
+    - mariadb:mariadb
+  volumes_from:
+    - dataphp
+
+dataphp:
+  image: debian:jessie
+  volumes:
+    - .:/var/www
+
+mariadb:
+  image: mariadb
+  ports:
+    - "8306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=dev
+    - MYSQL_USER=dev
+    - MYSQL_PASSWORD=dev
+    - MYSQL_DATABASE=phpug
